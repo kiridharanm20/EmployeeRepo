@@ -1,74 +1,61 @@
 public class Main {
+
     public static void main(String[] args) {
 
         EmployeeController controller =
-                new EmployeeController(10);
+                new EmployeeController();
 
         EmployeeView view =
                 new EmployeeView();
 
-        controller.addEmployee(101, "Kiran", 30000);
-        controller.addEmployee(102, "Arun", 35000);
-        controller.addEmployee(103, "Priya", 40000);
-
         while (true) {
 
-            view.showMenu();
+            view.menu();
 
-            int choice = view.getChoice();
+            int ch = view.getChoice();
 
-            switch (choice) {
+            switch (ch) {
 
                 case 1:
 
-                    view.displayEmployees(
-                            controller.getEmployees(),
-                            controller.getCount()
-                    );
+                    Employee e = view.getEmployee();
+
+                    controller.addEmployee(e);
 
                     break;
 
                 case 2:
 
-                    int searchId =
-                            view.getId("Enter Employee ID: ");
-
-                    if (controller.findEmployee(searchId) != null)
-                        view.showMessage("Employee Found");
-                    else
-                        view.showMessage("Employee Not Found");
+                    controller.displayEmployees();
 
                     break;
 
                 case 3:
 
-                    int updateId =
-                            view.getId("Enter Employee ID: ");
-
-                    double salary =
-                            view.getSalary("Enter New Salary: ");
-
-                    view.showMessage(
-                            controller.updateSalary(updateId, salary)
-                    );
+                    controller.searchEmployee(view.getId());
 
                     break;
 
                 case 4:
 
-                    int deleteId =
-                            view.getId("Enter Employee ID: ");
+                    int id = view.getId();
 
-                    view.showMessage(
-                            controller.deleteEmployee(deleteId)
-                    );
+                    double sal = view.getSalary();
+
+                    controller.updateSalary(id, sal);
 
                     break;
 
                 case 5:
 
+                    controller.deleteEmployee(view.getId());
+
+                    break;
+
+                case 6:
+
                     System.out.println("Exiting...");
-                    return;
+                    System.exit(0);
 
                 default:
 

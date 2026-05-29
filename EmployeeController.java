@@ -1,68 +1,156 @@
+
+import java.sql.*;
 public class EmployeeController {
+    Connection con;
+    EmployeeController() {
+        try {
 
-    Employee[] employees;
-    int count;
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-    EmployeeController(int size) {
+            con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/employee_db",
+                    "root",
+                    "Welcome@123"
+            );
 
-        employees = new Employee[size];
-        count = 0;
-    }
+            System.out.println("Database Connected");
 
-    void addEmployee(int id, String name, double salary) {
-
-        employees[count++] =
-                new Employee(id, name, salary);
-    }
-
-    Employee[] getEmployees() {
-        return employees;
-    }
-
-    int getCount() {
-        return count;
-    }
-
-    Employee findEmployee(int id) {
-
-        for (int i = 0; i < count; i++) {
-
-            if (employees[i].id == id) {
-                return employees[i];
-            }
+        } catch (Exception e) {
+            System.out.println(e);
         }
-
-        return null;
     }
 
-    String updateSalary(int id, double newSalary) {
+    // Add Employee
+    void addEmployee(Employee e) {
 
-        Employee e = findEmployee(id);
+        try {
 
-        if (e == null)
-            return "Employee Not Found";
+            String query =
+                    "INSERT INTO employee VALUES (?, ?, ?)";
 
-        e.salary = newSalary;
+            PreparedStatement ps =
+                    con.prepareStatement(query);
 
-        return "Salary Updated Successfully";
-    }
+            ps.setInt(1, e.id);
+            ps.setString(2, e.name);
+            ps.setDouble(3, e.salary);
 
-    String deleteEmployee(int id) {
+            ps.executeUpdate();
 
-        for (int i = 0; i < count; i++) {
+            System.out.println("Employee Added");
 
-            if (employees[i].id == id) {
-
-                for (int j = i; j < count - 1; j++) {
-                    employees[j] = employees[j + 1];
-                }
-
-                count--;
-
-                return "Employee Deleted Successfully";
-            }
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
+    }
 
-        return "Employee Not Found";
+    // Display Employees
+    void displayEmployees() {
+
+        try {
+
+            String query = "SELECT * FROM employee";
+
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery(query);
+
+            System.out.println("\nEmployee Details:");
+
+            while (rs.next()) {
+
+                System.out.println(
+                        rs.getInt("id") + " - " +
+                        rs.getString("name") + " - ₹" +
+                        rs.getDouble("salary")
+                );
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    // Search Employee
+    void searchEmployee(int id) {
+
+        try {
+
+            String query =
+                    "SELECT * FROM employee WHERE id=?";
+
+            PreparedStatement ps =
+                    con.prepareStatement(query);
+
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                System.out.println(
+                        rs.getInt("id") + " - " +
+                        rs.getString("name") + " - ₹" +
+                        rs.getDouble("salary")
+                );
+
+            } else {
+                System.out.println("Employee Not Found");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    // Update Salary
+    void updateSalary(int id, double salary) {
+
+        try {
+
+            String query =
+                    "UPDATE employee SET salary=? WHERE id=?";
+
+            PreparedStatement ps =
+                    con.prepareStatement(query);
+
+            ps.setDouble(1, salary);
+            ps.setInt(2, id);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0)
+                System.out.println("Salary Updated");
+            else
+                System.out.println("Employee Not Found");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    // Delete Employee
+    void deleteEmployee(int id) {
+
+        try {
+
+            String query =
+                    "DELETE FROM employee WHERE id=?";
+
+            PreparedStatement ps =
+                    con.prepareStatement(query);
+
+            ps.setInt(1, id);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0)
+                System.out.println("Employee Deleted");
+            else
+                System.out.println("Employee Not Found");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }

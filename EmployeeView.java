@@ -1,52 +1,56 @@
 import java.util.Scanner;
 
-public class EmployeeView {
+class EmployeeView {
 
     Scanner sc = new Scanner(System.in);
 
-    void showMenu() {
+    // Menu
+    void menu() {
 
         System.out.println("\n--- Employee Menu ---");
-        System.out.println("1. Display Employees");
-        System.out.println("2. Search Employee");
-        System.out.println("3. Update Salary");
-        System.out.println("4. Delete Employee");
-        System.out.println("5. Exit");
+        System.out.println("1. Add Employee");
+        System.out.println("2. Display Employees");
+        System.out.println("3. Search Employee");
+        System.out.println("4. Update Salary");
+        System.out.println("5. Delete Employee");
+        System.out.println("6. Exit");
     }
 
+    // Get Menu Choice
     int getChoice() {
 
-        System.out.print("Enter choice: ");
+        System.out.print("Enter Choice: ");
         return sc.nextInt();
     }
 
-    int getId(String msg) {
+    // Get Employee Details
+    Employee getEmployee() {
 
-        System.out.print(msg);
+        System.out.print("Enter ID: ");
+        int id = sc.nextInt();
+
+        sc.nextLine();
+
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Salary: ");
+        double salary = sc.nextDouble();
+
+        return new Employee(id, name, salary);
+    }
+
+    // Get ID
+    int getId() {
+
+        System.out.print("Enter ID: ");
         return sc.nextInt();
     }
 
-    double getSalary(String msg) {
+    // Get Salary
+    double getSalary() {
 
-        System.out.print(msg);
+        System.out.print("Enter New Salary: ");
         return sc.nextDouble();
-    }
-
-    void displayEmployees(Employee[] employees, int count) {
-
-        System.out.println("\nEmployee Details:");
-
-        for (int i = 0; i < count; i++) {
-
-            System.out.println(
-                    employees[i].id + " - " +
-                    employees[i].name + " - ₹" +
-                    employees[i].salary
-            );
-        }
-    }
-
-    void showMessage(String msg) {
-        System.out.println(msg);
     }
 }
